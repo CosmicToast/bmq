@@ -1,0 +1,2 @@
+# add message from stdin to queue
+base64 >> "$queue".queue

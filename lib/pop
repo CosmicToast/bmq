@@ -1,0 +1,19 @@
+CUT="$queue".cut
+OUT="$queue".out
+QUEUE="$queue".queue
+
+# create rollback journal if we don't have one yet
+if ! [ -f "$CUT" ]; then
+    # this step is idempotent
+    head -n1 "$QUEUE" | base64 -d > "$OUT"
+    tail -n+2 "$QUEUE" > "$CUT"
+fi
+
+# we might have been interrupted last round
+# but this is idempotent
+# so always do it
+cp "$CUT" "$QUEUE"
+
+# finish transaction and delete the rollback journal
+cat "$OUT"
+rm "$CUT" "$OUT"

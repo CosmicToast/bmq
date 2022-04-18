@@ -1,0 +1,11 @@
+#!/bin/sh
+read cmd queue
+[ -z "$queue" ] && queue=default
+export queue
+
+case "$cmd" in
+pop) . pop ;;
+push) . push ;;
+esac
+
+exit 0

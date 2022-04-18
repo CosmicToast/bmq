@@ -1,0 +1,12 @@
+QUEUE="$queue".queue
+WAL="$queue".wal
+
+# there's a transaction to handle
+if [ -f "$WAL".1 ]; then
+    [ -f "$WAL".2 ] || base64 "$WAL".1 > "$WAL".2
+    # we always repeat this step,
+    # in case a read has already changed the queue
+    cat "$QUEUE" "$WAL".2 > "$WAL".3
+    cp "$WAL".3 "$QUEUE"
+    rm "$WAL".*
+fi
