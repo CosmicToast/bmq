@@ -1,2 +1,7 @@
-# add message from stdin to queue
-base64 >> "$queue".queue
+# ensure the queue exists,
+# else the checkpoint will ignore our WAL file
+touch "$queue".queue
+
+# write to the WAL,
+# the server will do the checkpoint itself
+cat > "$queue".wal.1
