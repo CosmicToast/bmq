@@ -1,8 +1,14 @@
 #!/bin/sh
 export PATH="$PWD/lib:$PATH"
 # process any remaining transactions
-. wal
+checkpoint() (
+	for queue in *.queue; do
+		queue=$(basename "$queue" .queue)
+		. wal
+	done
+)
+checkpoint
 while ncat -l 1234 -c handler; do
     # if the handler crashed, we can catch it here
-    . wal
+    checkpoint
 done
